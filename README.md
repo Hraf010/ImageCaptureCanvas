@@ -48,6 +48,8 @@ takePicture() {
 ```
 demonstartion de l'etape 1 :
 
+![](images/capture1.png)<br>
+![](images/capture2.png)<br>
 ### ETAPE 2 : Ajout des filtres
 
 Dans cette version l’interface contiendra en plus des éléments décrits dans la version 1, un ensemble de boutons permettant d’ajuster les réglages de l’image capturée. Un bouton « enregistrer » permettra l’enregistrement de l’image finalisée 
@@ -87,6 +89,13 @@ applyFilter(canvas, value, filter) {
         ctx.drawImage(this.canvas, 0, 0);
    }
  ```
+ 
+ demonstartion de l'etape 2 :
+
+![](images/capture3.png)<br>
+![](images/capture4.png)<br>
+![](images/capture5.png)<br>
+
 ### ETAPE3 : RECADRER L'IMAGE
 
 Le rectangle de recadrage doit permettre comporte 8 poignets nommées en utilisant les quatre cardinalités : N pour Nord, E pour Est, O pour Ouest et S pour Sud. Les quatre poignets sont donc : NN, NE, NO, EE, OO, SE, SS et SO :  Les poignets EE et OO sont sensibles uniquement au recadrage en largeur, 
@@ -149,9 +158,20 @@ Quand le recadrage est effectué, l’utilisateur appuie sur le bouton « enregi
 
  ```
  
+ demonstartion de l'etape 3 :
+
+![](images/capture6.png)<br>
+![](images/capture7.png)<br>
+
+ ###Hebergement du travail dans NPM
+ La version 3, mais hébergée dans npmjs.org de façon à ce que tout le monde pourra l’utiliser <br>
+ ![](images/npm1.png)<br>
+ ![](images/npm2.png)<br>
+ ![](images/npm3.png)<br>
+ 
  
 
 vous pouvez télécharger le module avec npm :
 ```
-npm install glsidmodulecapture
+npm install capturepictureglsid           
 ```
