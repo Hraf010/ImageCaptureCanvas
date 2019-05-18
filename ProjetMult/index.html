@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Projet Multimedia</title>
+    
+</head>
+<body>
+    
+    <div id="container"></div>
+    <button id='start'>prendre une photo</button>
+
+    <script src="index.js"></script>
+    <script>
+        
+        const takemephoto = new TakeMePhoto({
+            containerId: 'container',
+            width: 300,
+            height: 300,
+        });
+
+        document.querySelector('#start').addEventListener('click', () => {
+            takemephoto.start();
+            document.querySelector('#start').remove();
+        });
+
+    </script>
+</body>
+</html>
