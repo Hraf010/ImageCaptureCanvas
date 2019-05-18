@@ -7,7 +7,7 @@ Le module sera développé en utilisant une approche incrémentale en trois vers
 ## Getting Started
 
 
-Ces instructions vous permettront d’obtenir une copie du projet opérationnel sur votre ordinateur local à des fins de développement et de test.
+Ces instructions vous permettront d’obtenir une copie du projet opérationnel sur votre ordinateur local à des fins de développement et de test
 
 ### Conditions préalables
 
@@ -23,7 +23,7 @@ et si non la vidéo sera toujours en cours d'exécution pour prendre plus de pho
 
 cette fonction fait démarrer la vidéo
 ```
-start() {
+            start() {
 
             this.container.appendChild(this.video);
             this.container.appendChild(this.captureButton);
@@ -32,7 +32,7 @@ start() {
 
             this.initStream();
          
-    }
+            }
 ```
 
 
@@ -40,12 +40,9 @@ cette fonction permettra à l'utilisateur de prendre une photo
 
 ```
 takePicture() {
-         const { filter: { initialized } } = this.config;
 
-        if(!initialized) this.setupFilters();
         const context = this.canvas.getContext('2d');
         context.drawImage(this.video, 0, 0);
-        this.config.capturing = false;
       
     }
 ```
@@ -53,12 +50,13 @@ demonstartion de l'etape 1 :
 
 ### ETAPE 2 : Ajout des filtres
 
-Dans cette version l’interface contiendra en plus des éléments décrits dans la version 1, un ensemble de boutons permettant d’ajuster les réglages de l’image capturée. Un bouton « enregistrer » permettra l’enregistrement de l’image finalisée. 
+Dans cette version l’interface contiendra en plus des éléments décrits dans la version 1, un ensemble de boutons permettant d’ajuster les réglages de l’image capturée. Un bouton « enregistrer » permettra l’enregistrement de l’image finalisée 
 
 
 j'ai utilisé pour cette version 4 filtres : blur , brightness , opacity and saturate
 cette fonction qui crée les boutons de filtres
-...
+
+```
 setupFilters() {
         this.config.filter.initialized = true;
         
@@ -76,20 +74,19 @@ setupFilters() {
             this.capture.appendChild(button);
         });
              }
-...
+```
 
 
 cette fonction applique le filtre donné à canvas
 
-...
+```
 applyFilter(canvas, value, filter) {
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.filter = `${name}(${value}${unit})`;
         ctx.drawImage(this.canvas, 0, 0);
    }
-...
-
+ ```
 ### ETAPE3 : RECADRER L'IMAGE
 
 Le rectangle de recadrage doit permettre comporte 8 poignets nommées en utilisant les quatre cardinalités : N pour Nord, E pour Est, O pour Ouest et S pour Sud. Les quatre poignets sont donc : NN, NE, NO, EE, OO, SE, SS et SO :  Les poignets EE et OO sont sensibles uniquement au recadrage en largeur, 
@@ -100,7 +97,7 @@ Quand le recadrage est effectué, l’utilisateur appuie sur le bouton « enregi
  
  cette foction montre comment recadrer une image
  
- ...
+ ```
  resizable.onmousedown = (e) => {
 
             if(e.target != resizable) return false;
@@ -150,11 +147,11 @@ Quand le recadrage est effectué, l’utilisateur appuie sur le bouton « enregi
 
         }
 
- ...
+ ```
  
  
 
 vous pouvez télécharger le module avec npm :
-...
+```
 npm install glsidmodulecapture
-...
+```
