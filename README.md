@@ -1,88 +1,160 @@
-# Project Title
+# Capture d'une photo avec canvas
 
-One Paragraph of project description goes here
+Notre objective est de faire la développement d’un module permettant de capturer la photo de l’utilisateur pour pouvoir l’ajouter à son profile. Ce module sera utilisable dans les applications Web, Mobiles hybrides et Desktop basées sur les technologies WEB. 
+Le module sera développé en utilisant une approche incrémentale en trois versions successives :
+
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
-### Prerequisites
+Ces instructions vous permettront d’obtenir une copie du projet opérationnel sur votre ordinateur local à des fins de développement et de test.
 
-What things you need to install the software and how to install them
+### Conditions préalables
 
+vous aurez juste besoin d'un navigateur Web 
+
+### ETAPE 1 : capture d'une photo
+
+dans cette étape, une vidéo commencera à montrer la caméra
+après cela, si vous voulez prendre une photo, vous devez cliquer sur le bouton et attendre 3 secondes.
+et si vous avez aimé la photo, vous pouvez la sauvegarder
+et si non la vidéo sera toujours en cours d'exécution pour prendre plus de photos
+
+
+cette fonction fait démarrer la vidéo
 ```
-Give examples
-```
+start() {
 
-### Installing
+            this.container.appendChild(this.video);
+            this.container.appendChild(this.captureButton);
+            this.container.appendChild(this.timer);
+            this.container.appendChild(this.capture);
 
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
-
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
+            this.initStream();
+         
+    }
 ```
 
-### And coding style tests
 
-Explain what these tests test and why
+cette fonction permettra à l'utilisateur de prendre une photo
 
 ```
-Give an example
+takePicture() {
+         const { filter: { initialized } } = this.config;
+
+        if(!initialized) this.setupFilters();
+        const context = this.canvas.getContext('2d');
+        context.drawImage(this.video, 0, 0);
+        this.config.capturing = false;
+      
+    }
 ```
+demonstartion de l'etape 1 :
 
-## Deployment
+### ETAPE 2 : Ajout des filtres
 
-Add additional notes about how to deploy this on a live system
+Dans cette version l’interface contiendra en plus des éléments décrits dans la version 1, un ensemble de boutons permettant d’ajuster les réglages de l’image capturée. Un bouton « enregistrer » permettra l’enregistrement de l’image finalisée. 
 
-## Built With
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+j'ai utilisé pour cette version 4 filtres : blur , brightness , opacity and saturate
+cette fonction qui crée les boutons de filtres
+...
+setupFilters() {
+        this.config.filter.initialized = true;
+        
+        const { filter: {filterNames, filterFuncs} } = this.config;
 
-## Contributing
+        filterNames.map((filter, i) => {
+            const button = document.createElement('button');
+            button.textContent = filter;
+            if(filter == 'Sepia'){
+                button.style = 'display : block; visibility : hidden';
+            }
+            button.className = 'takemephoto-filter'; // to give the users the ability to style the buttons
+            button.addEventListener('click', () => this.setupFilter(filterFuncs[i]));
+            
+            this.capture.appendChild(button);
+        });
+             }
+...
 
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
 
-## Versioning
+cette fonction applique le filtre donné à canvas
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+...
+applyFilter(canvas, value, filter) {
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.filter = `${name}(${value}${unit})`;
+        ctx.drawImage(this.canvas, 0, 0);
+   }
+...
 
-## Authors
+### ETAPE3 : RECADRER L'IMAGE
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+Le rectangle de recadrage doit permettre comporte 8 poignets nommées en utilisant les quatre cardinalités : N pour Nord, E pour Est, O pour Ouest et S pour Sud. Les quatre poignets sont donc : NN, NE, NO, EE, OO, SE, SS et SO :  Les poignets EE et OO sont sensibles uniquement au recadrage en largeur, 
+ Les poignets NN et SS sont sensibles uniquement au recadrage en hauteur,  Les poignets NE, NO, SE et SO sont sensibles uniquement au recadrage en hauteur et en largeur 
+de manière proportionnelle. 
+Une bande en L extérieure à chacune des poignets NE, NO, SE et SO non affichée dans l’image, permettra de pivoter l’Outline de recadrage. 
+Quand le recadrage est effectué, l’utilisateur appuie sur le bouton « enregistrer » et obtient l’image recadrée. 
+ 
+ cette foction montre comment recadrer une image
+ 
+ ...
+ resizable.onmousedown = (e) => {
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+            if(e.target != resizable) return false;
 
-## License
+            const original_x = resizable.getBoundingClientRect().left - canvas.getBoundingClientRect().left;
+            const original_y = resizable.getBoundingClientRect().top - canvas.getBoundingClientRect().top;
+            const { width, height } = resizable.getBoundingClientRect();
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+            const original_mouse_x = e.pageX;
+            const original_mouse_y = e.pageY;
 
-## Acknowledgments
+            const { left:leftLimit, right:rightLimit, top:topLimit, bottom:bottomLimit } = canvas.getBoundingClientRect();
 
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+            function startMoving(e) {
 
+                const left = original_x + (e.pageX - original_mouse_x);
+                const top = original_y + (e.pageY - original_mouse_y);
+
+                if( (leftLimit+left+width) <= rightLimit ) {
+                    if(left >= 0) {
+                        resizable.style.left = `${left}px`;
+                    }else {
+                        resizable.style.left = '0';
+                    }
+                }else {
+                    resizable.style.left = `${rightLimit-leftLimit-width}px`;
+                }
+                
+                if( (topLimit+top+height) <= bottomLimit ) {
+                    if(top >= 0) {
+                        resizable.style.top = `${top}px`;
+                    }else {
+                        resizable.style.top = `0`;
+                    }
+                }else {
+                    resizable.style.top = `${bottomLimit-topLimit-height}px`;
+                }
+            }
+
+            function stopMoving() {
+                window.removeEventListener('mousemove', startMoving);
+                window.removeEventListener('mouseup', stopMoving);
+            }
+
+            window.addEventListener('mousemove', startMoving);
+            window.addEventListener('mouseup', stopMoving);
+
+        }
+
+ ...
+ 
+ 
+
+vous pouvez télécharger le module avec npm :
+...
+npm install glsidmodulecapture
+...
